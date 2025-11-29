@@ -1,0 +1,57 @@
+name: scan-and-sync-image
+
+on:
+  # schedule:
+  #   - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  image-sync:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        target:
+          - app
+          - db
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@main
+        with:
+          python-version: '3.10.12'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Python script
+        run: |
+          python generate_image_syncer_config.py \
+            --template image_templates/${{ matrix.target }}.yaml \
+            --output .images/${{ matrix.target }}.yaml
+      
+      - uses: hhyasdf/image-sync-action@v1.1
+        with:
+          version: latest
+          auth_file: .auth.yaml
+          images_file: .images/${{ matrix.target }}.yaml
+          arch: amd64
+          os: linux
+          proc: 16
+          retries: 3
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          ALIYUN_ACR_USERNAME: ${{ secrets.ALIYUN_ACR_USERNAME }}
+          ALIYUN_ACR_PASSWORD: ${{ secrets.ALIYUN_ACR_PASSWORD }}
+      
+      - name: Upload generated file
+        uses: actions/upload-artifact@v4
+        with:
+          name: images-${{ matrix.target }}
+          path: .images/${{ matrix.target }}.yaml

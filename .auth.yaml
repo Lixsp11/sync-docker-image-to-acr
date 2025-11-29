@@ -1,0 +1,6 @@
+docker.io:
+  username: ${DOCKER_HUB_USERNAME}
+  password: ${DOCKER_HUB_PASSWORD}
+registry.cn-shanghai.aliyuncs.com/namespace:
+  username: ${ALIYUN_ACR_USERNAME}
+  password: ${ALIYUN_ACR_PASSWORD}
