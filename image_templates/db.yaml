@@ -1,0 +1,19 @@
+- image: "mongo"
+  mirror_image: 
+    - "registry.cn-shanghai.aliyuncs.com/namespace/mongo"
+  versions: 
+    - "^8.0$"
+    - "^[0-9.]+$\\-alpine"
+  min_version: "7.2"
+  max_version: ""
+  limit: 10
+
+- image: "redis"
+  mirror_image: 
+    - "registry.cn-shanghai.aliyuncs.com/namespace/redis"
+  versions: 
+    - "^6.2$"
+    - "^7.4$"
+  min_version: ""
+  max_version: ""
+  limit: 10

@@ -1,0 +1,8 @@
+- image: "ollama/ollama"
+  mirror_image: 
+    - "registry.cn-shanghai.aliyuncs.com/namespace/ollama"
+  versions: 
+    - "^0.13.1$"
+  min_version: ""
+  max_version: ""
+  limit: 1
